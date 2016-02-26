@@ -1,4 +1,10 @@
-angular.module('stocker', ['ionic', 'stocker.controllers'])
+angular.module('stocker', [
+  'ionic',
+  'stocker.controllers',
+  'stocker.services',
+  'stocker.filters',
+  'stocker.directives'
+])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -16,9 +22,9 @@ angular.module('stocker', ['ionic', 'stocker.controllers'])
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
-  $stateProvider
+.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
 
+  $stateProvider
   .state('app', {
     url: '/app',
     abstract: true,
@@ -26,7 +32,7 @@ angular.module('stocker', ['ionic', 'stocker.controllers'])
     controller: 'AppCtrl'
     })
   .state('app.stocklist', {
-      url: '/stocklist',
+      url: '/stocks',
       views: {
         'menuContent': {
           templateUrl: 'templates/stocklist.html',
@@ -35,7 +41,7 @@ angular.module('stocker', ['ionic', 'stocker.controllers'])
       }
     })
   .state('app.single', {
-    url: '/stocks/:stockSymbol',
+    url: '/stocks/:ticker',
     views: {
       'menuContent': {
         templateUrl: 'templates/Stock.html',
@@ -44,5 +50,5 @@ angular.module('stocker', ['ionic', 'stocker.controllers'])
     }
   });
 
-  $urlRouterProvider.otherwise('/app/stocklist');
+  $urlRouterProvider.otherwise('/app/stocks');
 });
