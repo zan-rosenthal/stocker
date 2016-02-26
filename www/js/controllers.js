@@ -46,7 +46,7 @@ angular.module('stocker.controllers', [])
 
       $scope.userStocks = [
         {ticker:"AAPL"},
-        {ticker:"GPGRO"},
+        {ticker:"GPRO"},
         {ticker:"FB"},
         {ticker:"NFLX"},
         {ticker:"TSLA"},
@@ -64,21 +64,30 @@ angular.module('stocker.controllers', [])
 
 .controller('StockCtrl', ['$scope', '$stateParams','stockDataFactory',
   function($scope, $stateParams, stockDataFactory) {
+    $scope.ticker = $stateParams.ticker;
+    $scope.chartView = 1;
+
     $scope.$on("$ionicView.afterEnter", function(){
       getPriceData();
       getDetailData();
     });
-    $scope.ticker = $stateParams.ticker;
+
+    $scope.chartViewSelector = function(chartID){
+      $scope.chartView = chartID;
+    };
+
     var getPriceData = function(){
       var priceData = stockDataFactory.getPriceData($scope.ticker);
       priceData.then(function(data){
         console.log(data);
+        $scope.priceData = data;
       });
     };
     var getDetailData = function(){
       var detailData = stockDataFactory.getDetailData($scope.ticker);
       detailData.then(function(data){
         console.log(data);
+        $scope.detailData = data;
       });
     };
   }
