@@ -1,8 +1,18 @@
 angular.module('stocker.services', [])
-.factory('stockDataFactory', function($q, $http){
+.factory('encodeURIFactory', function(){
+  return {
+    encode: function(string){
+      console.log(string);
+      return encodeURIComponent(string).replace(/\""/g,"%22").replace(/\ /g, "%20").replace(/[!''()]/g, escape);
+    }
+  };
+})
+.factory('stockDataFactory', function($q, $http, encodeURIFactory){
    var getDetailData = function(ticker){
     var deferred = $q.defer();
-    var url = "http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20IN%20(%22"+ticker+"%22)&format=json&env=http://datatables.org/alltables.env";
+    var query = 'select * from yahoo.finance.quotes where symbol IN ( "'+ticker+'" )';
+    var url = 'http://query.yahooapis.com/v1/public/yql?q='+encodeURIFactory.encode(query)+'&format=json&env=http://datatables.org/alltables.env';
+     console.log(url);
     $http.get(url)
     .success(function(response){
       var data = response.query.results.quote;
