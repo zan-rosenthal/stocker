@@ -2,9 +2,26 @@ angular.module('stocker.services', [])
 .factory('encodeURIFactory', function(){
   return {
     encode: function(string){
-      console.log(string);
       return encodeURIComponent(string).replace(/\""/g,"%22").replace(/\ /g, "%20").replace(/[!''()]/g, escape);
     }
+  };
+})
+.factory('dateFactory', function($filter){
+
+  var currentDate = function(){
+    var date = $filter('date')(new Date(), 'yyyy-MM-dd');
+    return date;
+  };
+
+  var yearDate = function(){
+    var oneYearAgo = new Date( new Date().setDate(new Date().getDate()-366));
+    var date = $filter('date')(oneYearAgo, 'yyyy-MM-dd');
+    return date;
+  };
+
+  return {
+    currentDate:currentDate,
+    yearDate: yearDate
   };
 })
 .factory('stockDataFactory', function($q, $http, encodeURIFactory){
@@ -12,7 +29,7 @@ angular.module('stocker.services', [])
     var deferred = $q.defer();
     var query = 'select * from yahoo.finance.quotes where symbol IN ( "'+ticker+'" )';
     var url = 'http://query.yahooapis.com/v1/public/yql?q='+encodeURIFactory.encode(query)+'&format=json&env=http://datatables.org/alltables.env';
-     console.log(url);
+
     $http.get(url)
     .success(function(response){
       var data = response.query.results.quote;

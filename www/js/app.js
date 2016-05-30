@@ -1,9 +1,11 @@
 angular.module('stocker', [
   'ionic',
+  'nvd3',
+  'nvChart',
   'stocker.controllers',
   'stocker.services',
   'stocker.filters',
-  'stocker.directives'
+  'stocker.directives',
 ])
 
 .run(function($ionicPlatform) {
